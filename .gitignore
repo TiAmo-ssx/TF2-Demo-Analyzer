@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# 打包产物
+build/
+dist/
+*.spec.bak
+
+# 用户数据 / 数据库
+workspace/
+*.db
+*.sqlite
+*.db-journal
+settings.json
+
+# Rust 解析器二进制（只放 Releases，不提交源码仓库）
+resources/parser/parse_demo.exe
+*.exe
+
+# 发布包
+release/
+*.zip
+
+# 系统
+Thumbs.db
+.DS_Store

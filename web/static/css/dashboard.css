@@ -1,0 +1,676 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family:
+        "Microsoft YaHei",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background: #111827;
+    color: #f3f4f6;
+}
+
+.container {
+    width: 95%;
+    max-width: 1700px;
+    margin: 30px auto;
+}
+
+.header {
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
+}
+
+.header p {
+    margin: 0;
+    color: #9ca3af;
+}
+
+.selector {
+    background: #1f2937;
+    padding: 20px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.selector select {
+    background: #111827;
+    color: white;
+
+    border: 1px solid #374151;
+    border-radius: 8px;
+
+    padding: 10px 14px;
+    min-width: 360px;
+}
+
+.selector button {
+    border: none;
+    border-radius: 8px;
+
+    padding: 10px 20px;
+
+    background: #2563eb;
+    color: white;
+
+    cursor: pointer;
+}
+
+.selector button:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================================================
+   比赛信息
+   ========================================================= */
+
+.match-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+.info-card {
+    background: #1f2937;
+
+    padding: 20px;
+
+    border-radius: 14px;
+}
+
+.info-title {
+    color: #9ca3af;
+    font-size: 13px;
+
+    margin-bottom: 8px;
+}
+
+.info-value {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   Section
+   ========================================================= */
+
+.section {
+    background: #1f2937;
+
+    border-radius: 14px;
+
+    padding: 22px;
+
+    margin-bottom: 25px;
+}
+
+.section h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   Chart
+   ========================================================= */
+
+.chart-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+.chart-box {
+    background: #111827;
+
+    border-radius: 12px;
+
+    padding: 18px;
+
+    min-height: 800px;
+}
+
+.chart-box h3 {
+    margin-top: 0;
+}
+
+.chart-container {
+    height: 720px;
+    overflow-y: auto;
+}
+
+
+/* =========================================================
+   Team
+   ========================================================= */
+
+.team-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 20px;
+}
+
+.team-card {
+    background: #111827;
+
+    border-radius: 12px;
+
+    padding: 20px;
+}
+
+.team-card.red {
+    border-top: 4px solid #ef4444;
+}
+
+.team-card.blue {
+    border-top: 4px solid #3b82f6;
+}
+
+.team-card h3 {
+    margin-top: 0;
+}
+
+.team-stat-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 10px;
+}
+
+.team-stat {
+    background: #1f2937;
+
+    padding: 12px;
+
+    border-radius: 8px;
+}
+
+.team-stat .label {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.team-stat .value {
+    margin-top: 4px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   Table
+   ========================================================= */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    white-space: nowrap;
+}
+
+th {
+    background: #111827;
+
+    color: #9ca3af;
+
+    text-align: left;
+
+    padding: 12px;
+}
+
+td {
+    padding: 12px;
+
+    border-top:
+        1px solid #374151;
+}
+
+tr:hover td {
+    background: #263244;
+}
+
+.team-red {
+    color: #f87171;
+}
+
+.team-blue {
+    color: #60a5fa;
+}
+
+.class-list {
+    color: #d1d5db;
+    font-size: 13px;
+}
+
+/* =========================================================
+   Player Hover Card
+   ========================================================= */
+
+.player-name {
+    position: relative;
+
+    color: #f3f4f6;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: inline-block;
+}
+
+.player-name:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   玩家信息卡片
+   ========================= */
+
+.player-card {
+    position: fixed;
+
+    width: 380px;
+    height: 520px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    z-index: 9999;
+
+    background: #111827;
+
+    border: 1px solid #374151;
+
+    border-radius: 12px;
+
+    padding: 18px;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.45);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(5px);
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        visibility 0.15s ease;
+}
+
+.player-card.show {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+/* 玩家卡片顶部拖拽区域 */
+.player-card-header {
+    position: relative;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin-bottom: 15px;
+
+    padding-bottom: 12px;
+
+    padding-right: 40px;
+
+    border-bottom:
+        1px solid #374151;
+
+    cursor: move;
+
+    user-select: none;
+}
+
+.player-card.dragging {
+    cursor: grabbing;
+}
+
+/* 关闭按钮 */
+.player-card-close {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    width: 30px;
+    height: 30px;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 6px;
+
+    background: rgba(255, 255, 255, 0.08);
+    color: #9ca3af;
+
+    font-size: 22px;
+    line-height: 30px;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    z-index: 20;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.player-card-close:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+}
+
+.player-card-close:active {
+    transform: scale(0.95);
+}
+
+
+.player-card-name {
+    font-size: 20px;
+
+    font-weight: bold;
+}
+
+.player-card-team {
+    padding: 5px 10px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+.player-card-team.red {
+    background: rgba(239, 68, 68, 0.15);
+
+    color: #f87171;
+}
+
+.player-card-team.blue {
+    background: rgba(59, 130, 246, 0.15);
+
+    color: #60a5fa;
+}
+
+.player-card-team.other {
+    background: rgba(156, 163, 175, 0.15);
+
+    color: #9ca3af;
+}
+
+
+/* KDA */
+
+.player-card-kda {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 14px;
+}
+
+.kda-item {
+    background: #1f2937;
+
+    border-radius: 8px;
+
+    padding: 10px;
+
+    text-align: center;
+}
+
+.kda-item .number {
+    font-size: 21px;
+
+    font-weight: bold;
+}
+
+.kda-item .label {
+    color: #9ca3af;
+
+    font-size: 11px;
+
+    margin-top: 3px;
+}
+
+
+/* 普通统计 */
+
+.player-card-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 7px;
+}
+
+.player-stat {
+    background: #1f2937;
+
+    padding: 9px;
+
+    border-radius: 7px;
+}
+
+.player-stat-label {
+    color: #9ca3af;
+
+    font-size: 10px;
+}
+
+.player-stat-value {
+    margin-top: 3px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+/* 职业 */
+
+.player-card-section {
+    margin-top: 15px;
+}
+
+.player-card-section-title {
+    color: #9ca3af;
+
+    font-size: 12px;
+
+    margin-bottom: 7px;
+}
+
+.player-class-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+}
+
+.player-class {
+    background: #374151;
+
+    padding: 4px 7px;
+
+    border-radius: 5px;
+
+    font-size: 11px;
+}
+
+
+/* 武器 */
+
+.player-weapon-list {
+    max-height: 420px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+}
+
+.player-weapon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 4px 0;
+
+    font-size: 11px;
+
+    border-bottom: 1px solid #263244;
+}
+
+.player-weapon-name {
+    color: #d1d5db;
+
+    flex: 1;
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    margin-right: 12px;
+}
+
+.player-weapon-kills {
+    flex-shrink: 0;
+    font-weight: bold;
+    min-width: 25px;
+    text-align: right;
+}
+
+/* =========================================================
+   Rounds
+   ========================================================= */
+
+.round-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+
+    gap: 15px;
+}
+
+.round-card {
+    background: #111827;
+
+    border-radius: 10px;
+
+    padding: 18px;
+}
+
+.round-winner {
+    font-size: 20px;
+
+    font-weight: bold;
+
+    margin: 8px 0;
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .match-info {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .container {
+        width: 94%;
+    }
+
+    .match-info {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-stat-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .selector {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .selector select {
+        min-width: 0;
+        width: 100%;
+    }
+
+}

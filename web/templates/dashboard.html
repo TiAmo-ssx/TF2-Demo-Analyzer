@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>TF2 Demo Analyzer</title>
+
+<script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<script>
+function switchLang(lang) {
+    window.location.href = '/set_lang?lang=' + lang +
+        '&next=' + encodeURIComponent(location.pathname + location.search);
+}
+</script>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- =====================================================
+         Header
+         ===================================================== -->
+
+    <div class="header">
+
+        <h1>TF2 Demo Analyzer</h1>
+
+        <p>
+            {{ t('app_subtitle') }} ·
+            <a href="/manage"
+               style="color:#60a5fa;">
+                {{ t('manage_records') }}
+            </a>
+        </p>
+
+        <p>
+            <select class="lang-select"
+                    onchange="switchLang(this.value)">
+                {% for code, name in languages.items() %}
+                <option value="{{ code }}"
+                        {% if code == lang %}selected{% endif %}>
+                    {{ name }}
+                </option>
+                {% endfor %}
+            </select>
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         Match Selector
+         ===================================================== -->
+
+    <form class="selector"
+          method="get"
+          action="/">
+
+        <label>
+            {{ t('select_match') }}
+        </label>
+
+        <select name="match_id">
+
+            {% for item in match_ids %}
+
+            <option
+                value="{{ item.id }}"
+                {% if selected_id == item.id %}
+                    selected
+                {% endif %}
+            >
+
+                {{ item.map_name }}
+                · {{ item.match_time }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button type="submit">
+            {{ t('view_report') }}
+        </button>
+
+    </form>
+
+
+    {% if data %}
+
+    <!-- =====================================================
+         Match Information
+         ===================================================== -->
+
+    <div class="match-info">
+
+        <div class="info-card">
+
+            <div class="info-title">
+                {{ t('info_map') }}
+            </div>
+
+            <div class="info-value">
+                {{ data.match.map_name }}
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-title">
+                {{ t('info_time') }}
+            </div>
+
+            <div class="info-value">
+                {{ data.match.match_time }}
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-title">
+                {{ t('info_duration') }}
+            </div>
+
+            <div class="info-value">
+                {{ "%.2f"|format(data.match.duration or 0) }} {{ t('seconds') }}
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-title">
+                {{ t('info_players') }}
+            </div>
+
+            <div class="info-value">
+                {{ data.match.player_count }}
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-title">
+                {{ t('info_deaths') }}
+            </div>
+
+            <div class="info-value">
+                {{ data.match.kill_count }}
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-title">
+                {{ t('info_winner') }}
+            </div>
+
+            <div class="info-value">
+
+                {% if data.match.winner == "red" %}
+                    RED
+                {% elif data.match.winner == "blue" %}
+                    BLU
+                {% else %}
+                    {{ data.match.winner or t('unknown') }}
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         Team Comparison
+         ===================================================== -->
+
+    <div class="section">
+
+        <h2>
+            {{ t('team_comparison') }}
+        </h2>
+
+        <div class="team-grid">
+
+            {% for team_key in ["red", "blue"] %}
+
+            <div class="team-card {{ team_key }}">
+
+                <h3>
+                    {{ data.teams[team_key].name }}
+                </h3>
+
+                <div class="team-stat-grid">
+
+                    <div class="team-stat">
+                        <div class="label">{{ t('team_players') }}</div>
+                        <div class="value">
+                            {{ data.teams[team_key].players|length }}
+                        </div>
+                    </div>
+
+                    <div class="team-stat">
+                        <div class="label">{{ t('kills') }}</div>
+                        <div class="value">
+                            {{ data.teams[team_key].totals.scoreboard_kills }}
+                        </div>
+                    </div>
+
+                    <div class="team-stat">
+                        <div class="label">{{ t('deaths') }}</div>
+                        <div class="value">
+                            {{ data.teams[team_key].totals.scoreboard_deaths }}
+                        </div>
+                    </div>
+
+                    <div class="team-stat">
+                        <div class="label">{{ t('assists') }}</div>
+                        <div class="value">
+                            {{ data.teams[team_key].totals.scoreboard_assists }}
+                        </div>
+                    </div>
+
+                    <div class="team-stat">
+                        <div class="label">{{ t('points') }}</div>
+                        <div class="value">
+                            {{ data.teams[team_key].totals.points }}
+                        </div>
+                    </div>
+
+                    <div class="team-stat">
+                        <div class="label">{{ t('damage') }}</div>
+                        <div class="value">
+                            {{ data.teams[team_key].totals.damage_dealt }}
+                        </div>
+                    </div>
+
+                    <div class="team-stat">
+                        <div class="label">{{ t('healing') }}</div>
+                        <div class="value">
+                            {{ data.teams[team_key].totals.healing }}
+                        </div>
+                    </div>
+
+                    <div class="team-stat">
+                        <div class="label">{{ t('captures') }}</div>
+                        <div class="value">
+                            {{ data.teams[team_key].totals.captures }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         Charts
+         ===================================================== -->
+
+    <div class="section">
+
+        <h2>
+            {{ t('charts_title') }}
+        </h2>
+
+
+        <div class="chart-grid">
+
+            <div class="chart-box">
+
+                <h3>
+                    {{ t('chart_kda') }}
+                </h3>
+
+                <div class="chart-container">
+                    <canvas id="kdaChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="chart-box">
+
+                <h3>
+                    {{ t('chart_score') }}
+                </h3>
+
+                <div class="chart-container">
+                    <canvas id="scoreChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="chart-box">
+
+                <h3>
+                    {{ t('chart_damage') }}
+                </h3>
+
+                <div class="chart-container">
+                    <canvas id="damageChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="chart-box">
+
+                <h3>
+                    {{ t('chart_healing') }}
+                </h3>
+
+                <div class="chart-container">
+                    <canvas id="healingChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="chart-box">
+
+                <h3>
+                    {{ t('chart_objective') }}
+                </h3>
+
+                <div class="chart-container">
+                    <canvas id="objectiveChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="chart-box">
+
+                <h3>
+                    {{ t('chart_special') }}
+                </h3>
+
+                <div class="chart-container">
+                    <canvas id="specialChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         All Players Table
+         ===================================================== -->
+
+    <div class="section">
+
+        <h2>
+            {{ t('players_detail') }}
+        </h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>{{ t('team') }}</th>
+                    <th>{{ t('player') }}</th>
+                    <th>K</th>
+                    <th>D</th>
+                    <th>A</th>
+                    <th>{{ t('points') }}</th>
+                    <th>{{ t('damage') }}</th>
+                    <th>{{ t('healing') }}</th>
+                    <th>{{ t('captures') }}</th>
+                    <th>{{ t('defenses') }}</th>
+                    <th>{{ t('headshots') }}</th>
+                    <th>{{ t('backstabs') }}</th>
+                    <th>{{ t('uber') }}</th>
+                    <th>{{ t('buildings') }}</th>
+                    <th>{{ t('classes') }}</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for player in data.players %}
+
+                <tr>
+
+                    <td>
+
+                        {% if player.team == "red" %}
+
+                        <span class="team-red">
+                            RED
+                        </span>
+
+                        {% elif player.team == "blue" %}
+
+                        <span class="team-blue">
+                            BLU
+                        </span>
+
+                        {% else %}
+
+                        {{ t('team_other') }}
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        <span
+                            class="player-name"
+                            data-player-id="{{ player.id }}"
+                        >
+                            {{ player.player_name }}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        {{ player.scoreboard_kills or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.scoreboard_deaths or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.scoreboard_assists or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.points or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.damage_dealt or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.healing or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.captures or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.defenses or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.headshots or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.backstabs or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.ubercharges or 0 }}
+                    </td>
+
+                    <td>
+                        {{ player.buildings_destroyed or 0 }}
+                    </td>
+
+                    <td class="class-list">
+
+                        {% for cls in player.classes %}
+
+                            {{ cls.name }}×{{ cls.count }}
+
+                            {% if not loop.last %}
+                                ,
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         Rounds
+         ===================================================== -->
+
+    <div class="section">
+
+        <h2>
+            {{ t('rounds_title') }}
+        </h2>
+
+        <div class="round-grid">
+
+            {% for round in data.rounds %}
+
+            <div class="round-card">
+
+                <div>
+                    {{ t('round_label') }} {{ round.round_number }}
+                </div>
+
+                <div class="round-winner">
+
+                    {% if round.winner == "red" %}
+
+                        <span class="team-red">
+                            RED
+                        </span>
+
+                    {% elif round.winner == "blue" %}
+
+                        <span class="team-blue">
+                            BLU
+                        </span>
+
+                    {% else %}
+
+                        {{ round.winner }}
+
+                    {% endif %}
+
+                </div>
+
+                <div>
+                    {{ t('round_length') }}：
+                    {{ "%.2f"|format(round.length or 0) }}
+                    {{ t('seconds') }}
+                </div>
+
+                <div>
+                    {{ t('end_tick') }}：
+                    {{ round.end_tick }}
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         Player Hover Card
+         ===================================================== -->
+
+    <div id="playerCard" class="player-card">
+
+        <div id="playerCardHeader" class="player-card-header">
+
+            <div class="player-card-title">
+
+                <div
+                    id="cardPlayerName"
+                    class="player-card-name">
+                </div>
+
+                <div
+                    id="cardPlayerTeam"
+                    class="player-card-team">
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                id="playerCardClose"
+                class="player-card-close"
+                title="{{ t('card_close') }}"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div class="player-card-kda">
+
+            <div class="kda-item">
+                <div id="cardKills" class="number"></div>
+                <div class="label">{{ t('k_kills') }}</div>
+            </div>
+
+            <div class="kda-item">
+                <div id="cardDeaths" class="number"></div>
+                <div class="label">{{ t('k_deaths') }}</div>
+            </div>
+
+            <div class="kda-item">
+                <div id="cardAssists" class="number"></div>
+                <div class="label">{{ t('k_assists') }}</div>
+            </div>
+
+        </div>
+
+        <div class="player-card-stats">
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_score') }}</div>
+                <div id="cardPoints"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_damage') }}</div>
+                <div id="cardDamage"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_healing') }}</div>
+                <div id="cardHealing"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_captures') }}</div>
+                <div id="cardCaptures"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_defenses') }}</div>
+                <div id="cardDefenses"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_headshots') }}</div>
+                <div id="cardHeadshots"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_backstabs') }}</div>
+                <div id="cardBackstabs"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_uber') }}</div>
+                <div id="cardUber"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_buildings') }}</div>
+                <div id="cardBuildings"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_teleports') }}</div>
+                <div id="cardTeleports"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_dominations') }}</div>
+                <div id="cardDominations"
+                     class="player-stat-value"></div>
+            </div>
+
+            <div class="player-stat">
+                <div class="player-stat-label">{{ t('stat_revenges') }}</div>
+                <div id="cardRevenges"
+                     class="player-stat-value"></div>
+            </div>
+
+        </div>
+
+        <div class="player-card-section">
+
+            <div class="player-card-section-title">
+                {{ t('class_usage') }}
+            </div>
+
+            <div id="cardClasses"
+                 class="player-class-list">
+            </div>
+
+        </div>
+
+        <div class="player-card-section">
+
+            <div class="player-card-section-title">
+                {{ t('weapon_kills') }}
+            </div>
+
+            <div id="cardWeapons"
+                 class="player-weapon-list">
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         JavaScript
+         ===================================================== -->
+
+    <script>
+        const players = {{ data.chart_players | tojson }};
+        const teamChart = {{ data.team_chart | tojson }};
+        window.I18N = {{ translations | tojson }};
+    </script>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>
