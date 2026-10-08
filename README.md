@@ -78,6 +78,7 @@ TF2-Demo-Analyzer/
 
 - 开发环境：项目内的 `workspace/`
 - 发布版（exe）：`%LOCALAPPDATA%\TF2-Demo-Analyzer`
+- 原dem位置：steamapps\common\Team Fortress 2\tf\demos
 
 数据库放在用户目录而不是 exe 旁边，是为了避免把程序装到 `Program Files` 这类目录时因为权限问题写不了数据。
 
