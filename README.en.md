@@ -80,6 +80,7 @@ TF2-Demo-Analyzer/
 
 - Development: `workspace/` inside the project
 - Release (exe): `%LOCALAPPDATA%\TF2-Demo-Analyzer`
+- Original demo location: steamapps\common\Team Fortress 2\tf\demos
 
 The database is stored in the user directory rather than next to the exe, so it still works if the program is installed somewhere like `Program Files` that isn't writable.
 
