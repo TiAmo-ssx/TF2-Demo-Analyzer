@@ -98,5 +98,6 @@ Demo 解析能力来自 [demostf/parser](https://github.com/demostf/parser)，�
 [MIT](./LICENSE)
 
 ## 碎碎念
-这个版本可能是最终版了，作者也没什么精力改进升级了😬，如果有什么问题可以到b站上找到我哦😯\
+这个版本可能是最终版了，作者也没什么精力改进升级了😬\
+如果有什么问题可以到b站上找到我哦😯\
 附上链接🤲https://space.bilibili.com/505994875/
