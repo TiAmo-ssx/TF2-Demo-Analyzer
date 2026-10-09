@@ -55,12 +55,12 @@ class MainWindow:
         )
 
         self.root.geometry(
-            "900x650"
+            "960x900"
         )
 
         self.root.minsize(
-            800,
-            550
+            820,
+            700
         )
 
 
@@ -1349,6 +1349,12 @@ class MainWindow:
 
             self.current_stage = ""
 
+            # Rust Parser 不回报单文件内部进度，
+            # 用 indeterminate 动画提示"正在解析"，
+            # 避免文件少时进度条一直停在 0。
+            self.progress.config(mode="indeterminate")
+            self.progress.start(12)
+
             self._update_running_status()
 
 
@@ -1439,6 +1445,8 @@ class MainWindow:
 
             self.current_index = msg["index"]
 
+            self.progress.stop()
+            self.progress.config(mode="determinate")
             self.progress["value"] = msg["index"]
 
             self._update_running_status()
@@ -1507,9 +1515,18 @@ class MainWindow:
 
     def _update_counter(self):
 
+        # 已处理完的文件数 = 成功 + 重复 + 失败
+        completed = (
+            self.done_count
+            + self.dup_count
+            + self.fail_count
+        )
+
         self.counter_label.config(
             text=self._t(
                 "gui_counter_running",
+                x=completed,
+                n=self.total,
                 d=self.done_count,
                 p=self.dup_count,
                 f=self.fail_count
@@ -1550,6 +1567,8 @@ class MainWindow:
             text=""
         )
 
+        self.progress.stop()
+        self.progress.config(mode="determinate")
         self.progress["maximum"] = self.total
 
         self.progress["value"] = 0
@@ -1589,6 +1608,8 @@ class MainWindow:
             text=""
         )
 
+        self.progress.stop()
+        self.progress.config(mode="determinate")
         self.progress["maximum"] = 1
 
         self.progress["value"] = 0
@@ -1632,6 +1653,8 @@ class MainWindow:
             )
         )
 
+        self.progress.stop()
+        self.progress.config(mode="determinate")
         self.progress["maximum"] = self.total
 
         self.progress["value"] = self.total

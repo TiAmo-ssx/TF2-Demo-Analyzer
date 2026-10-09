@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -143,6 +144,97 @@ WEB_DEFAULT_PORT = 8765
 # ============================================================
 
 SUPPORTED_DEMO_EXTENSION = ".dem"
+
+
+# ============================================================
+# TF2 Demo 录像目录（游戏自带 demos）
+# ============================================================
+
+def _read_steam_libraries(vdf_path: Path):
+    """
+    解析 Steam 的 libraryfolders.vdf，返回所有库根目录。
+
+    文件内容形如：
+        "0"
+        {
+            "path"      "C:\\Program Files (x86)\\Steam"
+        }
+    """
+
+    libraries = []
+
+    try:
+        text = vdf_path.read_text(encoding="utf-8")
+    except Exception:
+        return libraries
+
+    for match in re.finditer(r'"path"\s+"([^"]+)"', text):
+        path = match.group(1).replace("\\\\", os.sep)
+        libraries.append(Path(path))
+
+    return libraries
+
+
+def get_tf2_demos_dir():
+    """
+    获取 TF2 游戏自带的 Demo 录像目录：
+
+        <Steam 库>/steamapps/common/Team Fortress 2/tf/demos
+
+    自动遍历 Steam 默认安装位置及 libraryfolders.vdf
+    里记录的所有库路径，找到存在 tf/demos 的目录即返回；
+    找不到返回 None（只读取，不主动创建该目录）。
+    """
+
+    steam_dirs = [
+        Path(
+            os.environ.get(
+                "ProgramFiles(x86)",
+                r"C:\Program Files (x86)"
+            )
+        ) / "Steam",
+        Path(
+            os.environ.get(
+                "ProgramFiles",
+                r"C:\Program Files"
+            )
+        ) / "Steam",
+    ]
+
+    libraries = []
+
+    for steam_dir in steam_dirs:
+
+        if not steam_dir.is_dir():
+            continue
+
+        libraries.append(steam_dir)
+
+        vdf = steam_dir / "steamapps" / "libraryfolders.vdf"
+
+        if vdf.is_file():
+            libraries.extend(
+                _read_steam_libraries(vdf)
+            )
+
+    for lib in libraries:
+
+        demos = (
+            lib
+            / "steamapps"
+            / "common"
+            / "Team Fortress 2"
+            / "tf"
+            / "demos"
+        )
+
+        if demos.is_dir():
+            return demos
+
+    return None
+
+
+TF2_DEMOS_DIR = get_tf2_demos_dir()
 
 
 # ============================================================

@@ -82,6 +82,8 @@ TF2-Demo-Analyzer/
 
 数据库放在用户目录而不是 exe 旁边，是为了避免把程序装到 `Program Files` 这类目录时因为权限问题写不了数据。
 
+另外，程序会自动识别 TF2 游戏自带的 Demo 录像目录（`<Steam 库>\steamapps\common\Team Fortress 2\tf\demos`），方便你快速找到录制的 `.dem` 文件。该目录只读取，程序不会在其中写入任何数据。
+
 ## ❓ 常见问题
 
 - 删除历史记录会不会删掉录像文件？不会，删除只影响数据库。

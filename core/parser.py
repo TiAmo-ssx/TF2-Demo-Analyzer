@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 from config.config import PARSER_PATH
@@ -121,14 +122,25 @@ class DemoParser:
         ]
 
 
+        # Windows 下隐藏 parse_demo.exe 的控制台窗口，
+        # 避免批量解析时频繁闪出 cmd 黑框。
+        run_kwargs = dict(
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+
+        if sys.platform == "win32":
+            run_kwargs["creationflags"] = (
+                subprocess.CREATE_NO_WINDOW
+            )
+
         try:
 
             result = subprocess.run(
                 command,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace"
+                **run_kwargs
             )
 
         except Exception as e:

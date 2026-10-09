@@ -84,6 +84,8 @@ TF2-Demo-Analyzer/
 
 The database is stored in the user directory rather than next to the exe, so it still works if the program is installed somewhere like `Program Files` that isn't writable.
 
+The program also auto-detects TF2's built-in demo folder (`<Steam library>\steamapps\common\Team Fortress 2\tf\demos`) so you can quickly locate the `.dem` files you recorded. This folder is read-only — the program never writes into it.
+
 ## ❓ FAQ
 
 - Does deleting a record delete the demo file? No — it only affects the database.
