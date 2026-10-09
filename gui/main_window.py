@@ -55,12 +55,12 @@ class MainWindow:
         )
 
         self.root.geometry(
-            "960x900"
+            "960x720"
         )
 
         self.root.minsize(
             820,
-            700
+            560
         )
 
 
@@ -148,11 +148,66 @@ class MainWindow:
     def create_widgets(self):
 
         # ----------------------------------------------------
+        # 可滚动容器（Canvas + 内部 Frame + 滚动条）
+        # ----------------------------------------------------
+
+        self.canvas = tk.Canvas(
+            self.root,
+            highlightthickness=0
+        )
+
+        self.scrollbar = ttk.Scrollbar(
+            self.root,
+            orient="vertical",
+            command=self.canvas.yview
+        )
+
+        self.content_frame = tk.Frame(
+            self.canvas
+        )
+
+        self.content_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(
+                scrollregion=self.canvas.bbox("all")
+            )
+        )
+
+        self.canvas_window = self.canvas.create_window(
+            (0, 0),
+            window=self.content_frame,
+            anchor="nw"
+        )
+
+        self.canvas.configure(
+            yscrollcommand=self.scrollbar.set
+        )
+
+        self.scrollbar.pack(
+            side="right",
+            fill="y"
+        )
+
+        self.canvas.pack(
+            side="left",
+            fill="both",
+            expand=True
+        )
+
+        self.canvas.bind(
+            "<Configure>",
+            self._on_canvas_configure
+        )
+
+        self._bind_mousewheel()
+
+
+        # ----------------------------------------------------
         # 标题
         # ----------------------------------------------------
 
         title = tk.Label(
-            self.root,
+            self.content_frame,
             text="TF2 Demo Analyzer",
             font=(
                 "Microsoft YaHei",
@@ -167,7 +222,7 @@ class MainWindow:
 
 
         self.subtitle_label = tk.Label(
-            self.root,
+            self.content_frame,
             text="",
             font=(
                 "Microsoft YaHei",
@@ -185,7 +240,7 @@ class MainWindow:
         # ----------------------------------------------------
 
         lang_frame = tk.Frame(
-            self.root
+            self.content_frame
         )
 
         lang_frame.pack(
@@ -217,7 +272,7 @@ class MainWindow:
         # ----------------------------------------------------
 
         self.file_frame = ttk.LabelFrame(
-            self.root,
+            self.content_frame,
             text=""
         )
 
@@ -323,6 +378,11 @@ class MainWindow:
             side="left",
             fill="both",
             expand=True
+        )
+
+        self.file_listbox.bind(
+            "<MouseWheel>",
+            self._on_listbox_wheel
         )
 
 
@@ -435,7 +495,7 @@ class MainWindow:
         # ----------------------------------------------------
 
         button_frame = tk.Frame(
-            self.root
+            self.content_frame
         )
 
         button_frame.pack(
@@ -486,7 +546,7 @@ class MainWindow:
         # ----------------------------------------------------
 
         self.progress_frame = ttk.LabelFrame(
-            self.root,
+            self.content_frame,
             text=""
         )
 
@@ -583,7 +643,7 @@ class MainWindow:
         # ----------------------------------------------------
 
         self.log_frame = ttk.LabelFrame(
-            self.root,
+            self.content_frame,
             text=""
         )
 
@@ -611,6 +671,56 @@ class MainWindow:
             padx=10,
             pady=10
         )
+
+        self.log_text.bind(
+            "<MouseWheel>",
+            self._on_text_wheel
+        )
+
+
+    # ========================================================
+    # 滚动
+    # ========================================================
+
+    def _on_canvas_configure(self, event):
+        # content_frame 宽度跟随 canvas 宽度
+        self.canvas.itemconfig(
+            self.canvas_window,
+            width=event.width
+        )
+
+
+    def _bind_mousewheel(self):
+        # 滚轮滚动整个界面
+        self.root.bind_all(
+            "<MouseWheel>",
+            self._on_wheel
+        )
+
+
+    def _on_wheel(self, event):
+        self.canvas.yview_scroll(
+            int(-event.delta / 120),
+            "units"
+        )
+
+
+    def _on_listbox_wheel(self, event):
+        # 文件列表内部滚动，不触发整体滚动
+        self.file_listbox.yview_scroll(
+            int(-event.delta / 120),
+            "units"
+        )
+        return "break"
+
+
+    def _on_text_wheel(self, event):
+        # 日志内部滚动，不触发整体滚动
+        self.log_text.yview_scroll(
+            int(-event.delta / 120),
+            "units"
+        )
+        return "break"
 
 
     # ========================================================
