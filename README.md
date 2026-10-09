@@ -21,7 +21,7 @@
 
 ### 直接下载发布版
 
-1. 从 [Releases](https://github.com/TiAmo-ssx/TF2-Demo-Analyzer/releases) 下载 `TF2-Demo-Analyzer-v1.0.0.zip` 并解压。
+1. 从 [Releases](https://github.com/TiAmo-ssx/TF2-Demo-Analyzer/releases) 下载 `TF2-Demo-Analyzer-v1.0.1.zip` 并解压。
 2. 双击 `TF2-Demo-Analyzer.exe`。
 3. 点「添加文件」或「添加文件夹」选择 `.dem` 文件，然后点「开始解析」。
 4. 解析完成后会自动打开网页战报，也可以在界面上点「打开分析页面」或「管理比赛」。

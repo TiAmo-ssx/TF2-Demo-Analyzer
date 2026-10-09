@@ -23,7 +23,7 @@ A TF2 (Team Fortress 2) demo analysis tool. Pick a `.dem` file, parse out the ma
 
 ### Download the release
 
-1. Download `TF2-Demo-Analyzer-v1.0.0.zip` from [Releases](https://github.com/TiAmo-ssx/TF2-Demo-Analyzer/releases) and unzip it.
+1. Download `TF2-Demo-Analyzer-v1.0.1.zip` from [Releases](https://github.com/TiAmo-ssx/TF2-Demo-Analyzer/releases) and unzip it.
 2. Double-click `TF2-Demo-Analyzer.exe`.
 3. Click "Add files" or "Add folder" to pick your `.dem` files, then click "Start parsing".
 4. When it's done, the web report opens automatically — or use "Open dashboard" / "Manage matches".
